@@ -1,8 +1,21 @@
 ﻿
 body {
     padding-top: 1rem;
+    background: #f6821f fixed;
 }
 
+body3 {
+    padding-top: 1rem;
+    background: url("./graphics/schminder_background.jpg") 50% 50% fixed;
+}
+
+body2 {
+    padding-top: 1rem;
+    background-image: url('./graphics/schminder_background.jpg'); 
+    background-repeat: no-repeat; /* Prevent tiling */
+    background-position: center; /* Center the image */
+    background-attachment: fixed; /* Optional: keep it fixed on scroll */
+}
 /* Declare heights because of positioning of img element */
 .carousel-item {
     height: 40rem;
