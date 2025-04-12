@@ -33,9 +33,9 @@ namespace Schminder_Net.ef
             //this.post_id = form["post_id"].;
         }
 
-        public ent_post? doPostUpdate(ent_post p)
+        public c_post? doPostUpdate(c_post p)
         {
-            ent_post? ret = null;
+            c_post? ret = null;
 
             SqlParameter[] lParams = {
                 new SqlParameter("@post_id", SqlDbType.UniqueIdentifier, 0, ParameterDirection.Input, true, 0, 0, "", DataRowVersion.Current, p.post_id)
@@ -53,7 +53,7 @@ namespace Schminder_Net.ef
 
             string sp = "spPostUpdateById @post_id,@post_page_id,@post_author,@post_date,@post_content,@post_title,@post_excerpt,@post_status,@post_comment_status,@post_name,@post_type";
 
-            var retSP = this.dbCon?.lPost.FromSqlRaw(sp, lParams).AsEnumerable<ent_post>();
+            var retSP = this.dbCon?.lPost.FromSqlRaw(sp, lParams).AsEnumerable<c_post>();
 
             ret = retSP?.FirstOrDefault();
 
@@ -61,43 +61,43 @@ namespace Schminder_Net.ef
         }
 
 
-        public ent_post? doPostReadById(Guid post_id)
+        public c_post? doPostReadById(Guid post_id)
         {
-            ent_post? ret = null;
+            c_post? ret = null;
 
             SqlParameter[] lParams = {
                 new SqlParameter("@post_id", SqlDbType.UniqueIdentifier, 0, ParameterDirection.Input, true, 0, 0, "", DataRowVersion.Current, post_id)
             };
 
             string sp = "spPostReadById @post_id";
-            var retSP = this.dbCon?.lPost.FromSqlRaw(sp, lParams).AsEnumerable<ent_post>();
+            var retSP = this.dbCon?.lPost.FromSqlRaw(sp, lParams).AsEnumerable<c_post>();
 
             ret = retSP?.FirstOrDefault();
 
             return ret;
         }
 
-        public ent_post? doPostReadAbout()
+        public c_post? doPostReadAbout()
         {
-            ent_post? ret = null;
+            c_post? ret = null;
 
 
             SqlParameter[] lParams = {
-                new SqlParameter("@post_type", SqlDbType.UniqueIdentifier, 0, ParameterDirection.Input, true, 0, 0, "", DataRowVersion.Current, "posttype_about")
+                new SqlParameter("@post_type", SqlDbType.NVarChar, 0, ParameterDirection.Input, true, 0, 0, "", DataRowVersion.Current, "posttype_about")
             };
 
             string sp = "spPostReadByType @post_type";
 
-            var retSP = this.dbCon?.lPost.FromSqlRaw(sp, lParams).AsEnumerable<ent_post>();
+            var retSP = this.dbCon?.lPost.FromSqlRaw(sp, lParams).AsEnumerable<c_post>();
 
             ret = retSP?.FirstOrDefault();
 
             return ret;
         }
 
-        public List<ent_post>? doPostReadListByPageId(Guid? pageId, string post_type)
+        public List<c_post>? doPostReadListByPageId(Guid? pageId, string post_type)
         {
-            List<ent_post>? ret = null;
+            List<c_post>? ret = null;
 
             SqlParameter[] lParams = {
                 new SqlParameter("@post_page_id", SqlDbType.UniqueIdentifier, 0, ParameterDirection.Input, true, 0, 0, "", DataRowVersion.Current, pageId)
@@ -106,19 +106,19 @@ namespace Schminder_Net.ef
 
             string sp = "spPostReadListByPageId @post_page_id,@post_type";
 
-            var retSP = this.dbCon?.lPost.FromSqlRaw(sp, lParams).AsEnumerable<ent_post>();
+            var retSP = this.dbCon?.lPost.FromSqlRaw(sp, lParams).AsEnumerable<c_post>();
 
             ret = retSP?.ToList();
 
             return ret;
         }
 
-        public ent_post? doPostReadInitial()
+        public c_post? doPostReadInitial()
         {
-            ent_post? ret = null;
+            c_post? ret = null;
             string cmd = String.Format("Execute spPostReadInitial");
             var mQuery = this.dbCon?.lPost.FromSqlRaw(cmd);
-            var mEnum = mQuery?.AsEnumerable<ent_post>();
+            var mEnum = mQuery?.AsEnumerable<c_post>();
             ret = mEnum?.FirstOrDefault();
 
             return ret;
@@ -126,19 +126,44 @@ namespace Schminder_Net.ef
 
 
 
-        public ent_post? doPostReadNew()
+        public c_post? doPostReadNew()
         {
-            ent_post? ret = null;
+            c_post? ret = null;
             Guid postId = Guid.Empty;
             string cmd = String.Format("Execute spPostReadById '{0}'", postId);
             var mQuery = this.dbCon?.lPost.FromSqlRaw(cmd);
-            var mEnum = mQuery?.AsEnumerable<ent_post>();
+            var mEnum = mQuery?.AsEnumerable<c_post>();
 
-            ret = mEnum?.FirstOrDefault<ent_post>();
+            ret = mEnum?.FirstOrDefault<c_post>();
 
             return ret;
         }
 
+    }
+
+    public class c_post
+    {
+        public string getPostType()
+        {
+            string? ret = "";
+            foreach (var opt in post_type_options)
+            {
+                if (opt[0].Equals(post_type))
+                {
+                    ret = opt[1];
+                    break;
+                }
+            }
+            return ret;
+        }
+
+        public string[][] post_status_options = new String[][] { new String [] {  "poststatus_draft", "Draft" },
+            new String [] { "poststatus_public", "Public" }
+        };
+        public string[][] post_type_options = new String[][] { new String [] {  "posttype_post", "Post" }
+            ,new String [] { "posttype_initial", "Initial" }
+            ,new String [] { "posttype_about", "About" }
+        };
 
 
         public string doDisplayContent()
@@ -185,7 +210,7 @@ namespace Schminder_Net.ef
         public string getPostStatus()
         {
             string? ret = "";
-            foreach(var opt in post_status_options)
+            foreach (var opt in post_status_options)
             {
                 if (opt[0].Equals(post_status))
                 {
@@ -196,31 +221,10 @@ namespace Schminder_Net.ef
             return ret;
         }
 
-        public string getPostType()
-        {
-            string? ret = "";
-            foreach (var opt in post_type_options)
-            {
-                if (opt[0].Equals(post_type))
-                {
-                    ret = opt[1];
-                    break;
-                }
-            }
-            return ret;
-        }
-
-        public string[][] post_status_options = new String[][] { new String [] {  "poststatus_draft", "Draft" },
-            new String [] { "poststatus_public", "Public" }
-        };
-        public string[][] post_type_options = new String[][] { new String [] {  "posttype_post", "Post" }
-            ,new String [] { "posttype_initial", "Initial" }
-            ,new String [] { "posttype_about", "About" }
-        };
 
         [Key]
         public Guid post_id { get; set; }
-		public Guid? post_author { get; set; }
+        public Guid? post_author { get; set; }
         public DateTime? post_date { get; set; }
         public string? post_content { get; set; }
         public string? post_title { get; set; }

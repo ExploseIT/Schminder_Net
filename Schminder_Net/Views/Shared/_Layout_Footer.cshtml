@@ -1,0 +1,27 @@
+﻿
+@{
+    mApp _mApp = @Model;
+    var _pd = _mApp._cPageData;
+}
+
+<footer class="border-top footer text-muted">
+    <div class="container">
+
+        <div class="row">
+            <div class="col-sm-4 text-center">
+                &copy; @(DateTime.Now.Year) - @(_pd?.pdContent("app_name"))
+            </div>
+            <div class="col-sm-4 text-center">
+                * Version:@(_mApp.mVersion) *
+            </div>
+            <div class="col-sm-2 text-center">
+                <a href="~/privacy">Privacy</a>
+            </div>
+            <div class="col-sm-2 text-center">
+                <a href="~/sitemap">SiteMap</a>
+            </div>
+            <div class="col-12 text-center"><span>Developed by </span> <a href="https://explose.co.uk">Explose IT</a> </div>
+        </div>
+    </div>
+</footer>
+

@@ -10,9 +10,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <partial name="_Layout_GTag" for="@Model"></partial>
+
+    <partial name="_Layout_Meta" for="@Model"></partial>
+
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Schminder_Net</title>
+    <title>@ViewData["Title"] - @(_pd?.pdContent("app_name"))</title>
     <link rel="stylesheet" href="~/dist/bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/dist/fontawesome-free/css/all.css" />
     <link rel="stylesheet" href="~/site/site.css" asp-append-version="true" />
@@ -27,7 +31,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light box-shadow mb-3" style="background-color: #c56716">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Schminder_Net</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">@(_pd?.pdContent("app_name"))</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -51,11 +55,7 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - Schminder_Net - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
+    <partial name="_Layout_Footer" for="@Model"></partial>
 
 </body>
 </html>

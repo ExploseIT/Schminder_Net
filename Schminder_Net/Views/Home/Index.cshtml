@@ -1,5 +1,18 @@
-﻿@{
+﻿
+@using Schminder_Net.ef
+
+@{
     ViewData["Title"] = "Home Page";
+    mApp _mApp = @Model;
+
+    var _blogs = _mApp._cBlogs;
+
+    cPageData? _pd = _mApp._cPageData;
+
+    Dictionary<Guid, List<cProductData>>? _prdll = _mApp._cProductDatas;
+    var _prd_grp = _prdll!.GroupBy(prd => prd.Key).ToList();
+    string carousel_active = "active";
+    ViewData["Title"] = _pd?.pdContent("id_page_header");
 }
 
 <div class="text-center">

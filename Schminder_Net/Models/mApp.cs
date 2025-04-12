@@ -352,9 +352,9 @@ namespace Schminder_Net.Models
         //public System.Net.IPAddress? mRemoteIpAddress { get; set; } = null;
         public string mRemoteIpAddress { get; set; } = "";
         public bool mIsLoggedIn { get; set; } = false;
-        public ent_post? mPost { get; set; } = null;
-        public ent_post? mPost_About { get; set; } = null;
-        public List<ent_post>? mPosts { get; set; } = null;
+        public c_post? mPost { get; set; } = null;
+        public c_post? mPost_About { get; set; } = null;
+        public List<c_post>? mPosts { get; set; } = null;
         public List<ent_page>? mPages { get; set; } = null;
         public ent_page? mPage { get; set; } = null;
         public ent_menu? mMenu { get; set; } = null;

@@ -48,14 +48,14 @@ function doApiPost(cb, e, parms, url) {
 
     $("body").on('click', "#toast_beingupdated_close", function () {
         toastBeingUpdated.hide();
-        gtag_set('ezeway_biz', 'toast_close');
+        gtag_set('schminder_net', 'toast_close');
     });
 
     $("body").on('click', ".btn_ga", function () {
         let obj_name = this.name;
         let cl = this.classList;
 
-        gtag_set('ezeway_biz',obj_name);
+        gtag_set('schminder_net',obj_name);
 
         if (cl !== null && cl.contains("btn_toast_bypass") === false) { 
             toastBeingUpdated = $("#toast_beingupdated");
