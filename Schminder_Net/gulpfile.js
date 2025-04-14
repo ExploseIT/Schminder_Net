@@ -1,4 +1,4 @@
-/**
+﻿/**
  
  Install node and npm from https://nodejs.org
 
@@ -12,71 +12,75 @@
 
  **/
 
+const path = require('path');
+const outputBase = path.resolve(__dirname, '../../dist');
+
+
 const { src, dest, series } = require('gulp');
 var clean = require('gulp-clean');
 const fs = require('fs'); 
 
 function bootstrapiconscopy(cb) {
     src('./node_modules/bootstrap-icons/**', { encoding: false })
-        .pipe(dest('./wwwroot/dist/bootstrap-icons/'));
+        .pipe(dest(`${outputBase}/bootstrap-icons/`));
     cb();
 }
 
  function jqueryuicopy(cb) {
      src('./node_modules/jquery-ui/dist/jquery-ui.min.js')
-         .pipe(dest('./wwwroot/dist/jquery-ui/js/'));
+         .pipe(dest(`${outputBase}/jquery-ui/js/`));
      src('./node_modules/jquery-ui/dist/themes/smoothness/**')
-         .pipe(dest('./wwwroot/dist/jquery-ui/css/smoothness/'));
+         .pipe(dest(`${outputBase}/jquery-ui/css/smoothness/`));
          cb();
  }
 
  function bootstrapcopy(cb) {
      src('./node_modules/bootstrap/dist/css/bootstrap.min.*')
-     .pipe(dest('./wwwroot/dist/bootstrap/css/'));
+     .pipe(dest(`${outputBase}/bootstrap/css/`));
      src('./node_modules/bootstrap/dist/js/bootstrap.bundle.min.*')
-     .pipe(dest('./wwwroot/dist/bootstrap/js/'));
+     .pipe(dest(`${outputBase}/bootstrap/js/`));
      cb();
  }
  
  function jquerycopy(cb) {
      src('./node_modules/jquery/dist/**')
-   .pipe(dest('./wwwroot/dist/jquery/'));
+   .pipe(dest(`${outputBase}/jquery/`));
    cb();
  }
 
 
 function fortawesomecopy(cb) {
     src('./node_modules/@fortawesome/fontawesome-free/css/all.css', { encoding: false })
-        .pipe(dest('./wwwroot/dist/fontawesome-free/css/'));
+        .pipe(dest(`${outputBase}/fontawesome-free/css/`));
     src('./node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.*', { encoding: false })
-        .pipe(dest('./wwwroot/dist/fontawesome-free/webfonts/'));
+        .pipe(dest(`${outputBase}/fontawesome-free/webfonts/`));
     src('./node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.*', { encoding: false })
-        .pipe(dest('./wwwroot/dist/fontawesome-free/webfonts/'));
+        .pipe(dest(`${outputBase}/fontawesome-free/webfonts/`));
     src('./node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.*', { encoding: false })
-        .pipe(dest('./wwwroot/dist/fontawesome-free/webfonts/'));
+        .pipe(dest(`${outputBase}/fontawesome-free/webfonts/`));
     cb();
 }
  
  function jqueryvalidationcopy(cb) {
      src('./node_modules/jquery-validation/dist/*.js')
-         .pipe(dest('./wwwroot/dist/jquery-validation/'));
+         .pipe(dest(`${outputBase}/jquery-validation/`));
      cb();
  }
  
  
  // The `clean` function is not exported so it can be considered a private task.
  // It can still be used within the `series()` composition.
- function doclean(cb) {
-     const distPath = './wwwroot/dist/';
+function doclean(cb) {
+    const distPath = `${outputBase}/`;
 
-     if (fs.existsSync(distPath)) {
-         return src(distPath, { read: false, allowEmpty: true })
-             .pipe(clean());
-     } else {
-         console.log(`Skipping clean: ${distPath} does not exist.`);
-         cb(); // Call the callback to prevent Gulp from hanging
-     }
-   }
+    if (fs.existsSync(distPath)) {
+        return src(distPath, { read: false, allowEmpty: true })
+            .pipe(clean({ force: true })); // ✅ allow outside deletion
+    } else {
+        console.log(`Skipping clean: ${distPath} does not exist.`);
+        cb();
+    }
+}
    
    // The `build` function is exported so it is public and can be run with the `gulp` command.
    // It can also be used within the `series()` composition.

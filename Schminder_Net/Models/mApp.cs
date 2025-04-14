@@ -114,7 +114,20 @@ namespace Schminder_Net.Models
                 if (hc != null)
                 {
                     request = _m_hc.Request;
-                    mPath = _m_hc.Request.Path == "" ? "index" : _m_hc.Request.Path;
+                    mPath = _m_hc.Request.Path == "" ? "/Home" : _m_hc.Request.Path;
+                }
+                var jwtSettings = _m_conf.GetSection("JwtSettings");
+                if (jwtSettings != null)
+                {
+                    string jwtTokenName = jwtSettings["TokenName"]!;
+                    string jwtKey = jwtSettings["SecretKey"]!;
+                    string jwtIssuer = jwtSettings["Issuer"]!;
+                    string jwtAudience = jwtSettings["Audience"]!;
+
+                    this._m_jwtTokenName = jwtTokenName;
+                    this._m_jwtKey = jwtKey;
+                    this._m_jwtIssuer = jwtIssuer;
+                    this._m_jwtAudience = jwtAudience;
                 }
                 ent_setting eSettings = new ent_setting(dbCon);
 
@@ -391,6 +404,11 @@ namespace Schminder_Net.Models
         public ent_userandroles_success? e_User { get; set; } = null;
 
         public List<cSetting>? _m_settings_all { get; set; } = null;
+
+        public string? _m_jwtTokenName { get; set; } = null;
+        public string? _m_jwtKey { get; set; } = null;
+        public string? _m_jwtIssuer { get; set; } = null;
+        public string? _m_jwtAudience { get; set; } = null;
     }
 
     public class cBrowserDetails

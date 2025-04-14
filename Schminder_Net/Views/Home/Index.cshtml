@@ -3,13 +3,13 @@
 
 @{
     ViewData["Title"] = "Home Page";
-    mApp _mApp = @Model;
+    mApp _m_App = @Model;
 
-    var _blogs = _mApp._cBlogs;
+    var _blogs = _m_App._cBlogs;
 
-    cPageData? _pd = _mApp._cPageData;
+    cPageData? _pd = _m_App._cPageData;
 
-    Dictionary<Guid, List<cProductData>>? _prdll = _mApp._cProductDatas;
+    Dictionary<Guid, List<cProductData>>? _prdll = _m_App._cProductDatas;
     var _prd_grp = _prdll!.GroupBy(prd => prd.Key).ToList();
     string carousel_active = "active";
     ViewData["Title"] = _pd?.pdContent("id_page_header");
