@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using Schminder_Net.ef;
 using Schminder_Net.Models;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -64,7 +65,15 @@ if (!app.Environment.IsDevelopment())
 
 //app.UseHttpsRedirection();
 app.UseStaticFiles();
-
+if (app.Environment.IsDevelopment())
+{
+    app.UseStaticFiles(new StaticFileOptions
+    {
+        FileProvider = new PhysicalFileProvider(
+            Path.Combine(Directory.GetCurrentDirectory(), @"..\..\dist")),
+        RequestPath = "/dist"
+    });
+}
 app.UseRouting();
 
 app.UseAuthorization();

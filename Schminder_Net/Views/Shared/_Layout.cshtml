@@ -2,8 +2,10 @@
 @using Schminder_Net.ef;
 
 @{
-    mApp _mApp = @Model;
-    var _pd = _mApp._cPageData;
+    mApp _m_App = @Model;
+    var _pd = _m_App._cPageData;
+    var _set = _m_App._c_setting;
+    string sAppName = _set?.gset("AppName")!;
 }
 
 
@@ -16,7 +18,7 @@
 
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - @(_pd?.pdContent("app_name"))</title>
+    <title>@ViewData["Title"] - @(sAppName)</title>
     <link rel="stylesheet" href="~/dist/bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/dist/fontawesome-free/css/all.css" />
     <link rel="stylesheet" href="~/site/site.css" asp-append-version="true" />
@@ -31,7 +33,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light box-shadow mb-3" style="background-color: #c56716">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">@(_pd?.pdContent("app_name"))</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">@(_set?.gset("AppName")!)</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>

@@ -110,6 +110,8 @@ namespace Schminder_Net.Models
                 }
                 this._cProductDatas = new ent_productdata(dbCon).prdProductDataList(this.bIsLocal);
 
+                this._c_setting = new c_setting().set_settings(dbCon);
+
                 mPath = "";
                 if (hc != null)
                 {
@@ -148,8 +150,6 @@ namespace Schminder_Net.Models
             }
 
         }
-
-
 
         /*
         public Dictionary<Guid, List<cProductData>>? prdProductDataList(bool bIsLive)
@@ -339,6 +339,7 @@ namespace Schminder_Net.Models
         public List<cProductCat>? _prdcProductCats { get; set; } = null;
         public List<cPageData>? _cPageDatas { get; set; } = null;
         public cPageData? _cPageData { get; set; } = null;
+        public c_setting? _c_setting { get; set; } = null;
         public List<cBlog>? _cBlogs { get; set; } = null;
         public List<cBlogStatus>? _cBlogStatuses { get; set; } = null;
         public cBlog? _cBlog { get; set; } = null;
@@ -403,7 +404,7 @@ namespace Schminder_Net.Models
         public string? mVersion { get; set; } = null;
         public ent_userandroles_success? e_User { get; set; } = null;
 
-        public List<cSetting>? _m_settings_all { get; set; } = null;
+        public List<c_setting>? _m_settings_all { get; set; } = null;
 
         public string? _m_jwtTokenName { get; set; } = null;
         public string? _m_jwtKey { get; set; } = null;

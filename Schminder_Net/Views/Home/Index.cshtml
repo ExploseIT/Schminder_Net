@@ -4,7 +4,7 @@
 @{
     ViewData["Title"] = "Home Page";
     mApp _m_App = @Model;
-
+    var _set = _m_App._c_setting;
     var _blogs = _m_App._cBlogs;
 
     cPageData? _pd = _m_App._cPageData;
@@ -16,6 +16,6 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4 text-white" style="font-family: cursive"><span style="background-color: chocolate">Schminder</span> - Scheduling medication reminder and prescription scanner</h1>
-    <img src="@Url.Content("~/schminder_net_data/marketing/schmingle_googleplay_schminder.jpg")" alt="Schminder Logo" class="img-fluid" />
+    <h1 class="display-4 text-white" style="font-family: cursive"><span style="background-color: chocolate">@(_set?.gset("AppName")!)</span> - Scheduling medication reminder and prescription scanner</h1>
+    <img src="@Url.Content("~/schminder_net_data/marketing/schminder_googleplay_drugtime.jpg")" alt="Schminder Logo" class="img-fluid" />
 </div>

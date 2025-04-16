@@ -1,0 +1,19 @@
+
+
+...\bin\Debug\net8.0\wwwroot
+
+BBW App
+
+App id
+30583501
+
+appBBW
+
+API Key
+ydKS3aXV5ZINKkTTOGUkFV5oy
+
+API Key Secret
+rVig0Eh9Bmxrw9z9fhDzKMUwZC6itWmev3uARy0MiaBpCVqteJ
+
+Bearer Token
+AAAAAAAAAAAAAAAAAAAAAM2q0gEAAAAAm20fG5EEMNBBGedsO6DhOJzvMpI%3D2g2NpCNspdO0wj8R7wtvbgjG28pvUP0g3ZRXwy2BOJ3LTbDl6T

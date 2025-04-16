@@ -14,82 +14,75 @@
 
 const path = require('path');
 const outputBase = path.resolve(__dirname, '../../dist');
-
+const merge = require('merge-stream');
 
 const { src, dest, series } = require('gulp');
 var clean = require('gulp-clean');
 const fs = require('fs'); 
 
-function bootstrapiconscopy(cb) {
-    src('./node_modules/bootstrap-icons/**', { encoding: false })
+function bootstrapiconscopy() {
+    return src('./node_modules/bootstrap-icons/**', { encoding: false })
         .pipe(dest(`${outputBase}/bootstrap-icons/`));
-    cb();
 }
 
- function jqueryuicopy(cb) {
-     src('./node_modules/jquery-ui/dist/jquery-ui.min.js')
-         .pipe(dest(`${outputBase}/jquery-ui/js/`));
-     src('./node_modules/jquery-ui/dist/themes/smoothness/**')
-         .pipe(dest(`${outputBase}/jquery-ui/css/smoothness/`));
-         cb();
- }
+function jqueryuicopy() {
+    const s1 = src('./node_modules/jquery-ui/dist/jquery-ui.min.js', { allowEmpty: true })
+    .pipe(dest(`${outputBase}/jquery-ui/js/`));
+  
+    const s2 = src('./node_modules/jquery-ui/dist/themes/smoothness/*.css', { allowEmpty: true })
+    .pipe(dest(`${outputBase}/jquery-ui/css/`));
 
- function bootstrapcopy(cb) {
-     src('./node_modules/bootstrap/dist/css/bootstrap.min.*')
+    return merge(s1, s2);
+}
+
+ function bootstrapcopy() {
+     const s1 = src('./node_modules/bootstrap/dist/css/bootstrap.min.*')
      .pipe(dest(`${outputBase}/bootstrap/css/`));
-     src('./node_modules/bootstrap/dist/js/bootstrap.bundle.min.*')
+     const s2 = src('./node_modules/bootstrap/dist/js/bootstrap.bundle.min.*')
      .pipe(dest(`${outputBase}/bootstrap/js/`));
-     cb();
+     return merge(s1, s2); 
  }
  
- function jquerycopy(cb) {
-     src('./node_modules/jquery/dist/**')
+ function jquerycopy() {
+     return src('./node_modules/jquery/dist/**')
    .pipe(dest(`${outputBase}/jquery/`));
-   cb();
  }
 
 
-function fortawesomecopy(cb) {
-    src('./node_modules/@fortawesome/fontawesome-free/css/all.css', { encoding: false })
+function fortawesomecopy() {
+    const s1 = src('./node_modules/@fortawesome/fontawesome-free/css/all.css', { encoding: false })
         .pipe(dest(`${outputBase}/fontawesome-free/css/`));
-    src('./node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.*', { encoding: false })
+    const s2 = src('./node_modules/@fortawesome/fontawesome-free/webfonts/fa-regular-400.*', { encoding: false })
         .pipe(dest(`${outputBase}/fontawesome-free/webfonts/`));
-    src('./node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.*', { encoding: false })
+    const s3 = src('./node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.*', { encoding: false })
         .pipe(dest(`${outputBase}/fontawesome-free/webfonts/`));
-    src('./node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.*', { encoding: false })
+    const s4 = src('./node_modules/@fortawesome/fontawesome-free/webfonts/fa-brands-400.*', { encoding: false })
         .pipe(dest(`${outputBase}/fontawesome-free/webfonts/`));
-    cb();
+    return merge(s1, s2, s3, s4);
 }
  
- function jqueryvalidationcopy(cb) {
-     src('./node_modules/jquery-validation/dist/*.js')
+ function jqueryvalidationcopy() {
+     return src('./node_modules/jquery-validation/dist/*.js')
          .pipe(dest(`${outputBase}/jquery-validation/`));
-     cb();
  }
  
  
  // The `clean` function is not exported so it can be considered a private task.
  // It can still be used within the `series()` composition.
-function doclean(cb) {
+ function doclean() {
     const distPath = `${outputBase}/`;
-
+  
     if (fs.existsSync(distPath)) {
-        return src(distPath, { read: false, allowEmpty: true })
-            .pipe(clean({ force: true })); // ✅ allow outside deletion
+      return src(distPath, { read: false, allowEmpty: true })
+        .pipe(clean({ force: true }));
     } else {
-        console.log(`Skipping clean: ${distPath} does not exist.`);
-        cb();
+      console.log(`Skipping clean: ${distPath} does not exist.`);
+      return Promise.resolve(); // ✅ prevents Gulp from hanging or erroring
     }
-}
+  }
    
-   // The `build` function is exported so it is public and can be run with the `gulp` command.
-   // It can also be used within the `series()` composition.
-   function build(cb) {
-     // body omitted
-     cb();
-   }
-   
-exports.build = build;
+
+exports.build = exports.default;
 
 exports.default = series(
     doclean
@@ -97,11 +90,20 @@ exports.default = series(
      , fortawesomecopy
      , bootstrapcopy
     , jquerycopy
-    , jqueryuicopy
     , jqueryvalidationcopy
+    , jqueryuicopy
+    
  );
 
  exports.doclean = series(
     doclean
  );
+
+ exports.bootstrapiconscopy = bootstrapiconscopy;
+ exports.jqueryuicopy = jqueryuicopy;
+ exports.bootstrapcopy = bootstrapcopy;
+ exports.jquerycopy = jquerycopy;
+ exports.fortawesomecopy = fortawesomecopy;
+ exports.jqueryvalidationcopy = jqueryvalidationcopy;
+
 

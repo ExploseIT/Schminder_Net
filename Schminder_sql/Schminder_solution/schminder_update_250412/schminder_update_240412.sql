@@ -24,15 +24,18 @@ end
 else
 print ('Some data')
 
-if not exists (select * from tblPageContent where pc_name='app_name')
-INSERT [dbo].[tblPageContent] ([pc_name], [pc_value], [pc_pdpd_id]) VALUES (N'app_name', N'Schminder', N'00000000-0000-0000-0000-000000000000')
+if exists (select * from tblPageContent where pc_name='app_name')
+begin
+delete from tblPageContent where pc_name= N'app_name'
+--INSERT [dbo].[tblPageContent] ([pc_name], [pc_value], [pc_pdpd_id]) VALUES (N'app_name', N'Schminder', N'00000000-0000-0000-0000-000000000000')
+end
 
 update tblPageContent set pc_value='~/site/favicon/schminder_favicon.png' where pc_name='shortcut_icon'
 update tblPageContent set pc_value='image/png' where pc_name='shortcut_icon_type'
 update tblPageContent set pc_value='G-JF0TMHZX82' where pc_name='ga_id'
 update tblPageContent set pc_value='G-Z9HXGQVYSD' where pc_name='ga_admin_id'
-update tblPageContent set pc_value=N'Schminder - Scheduling medication reminder and prescription scanner' where pc_name = N'meta_description' 
-update tblPageContent set pc_value=N'Schminder, Medisafe,ExploseIT,MyTherapy,schedule,medication,reminder' where pc_name=N'meta_keywords'
-update tblPageContent set pc_value=N'Schminder - Scheduling medication reminder and prescription scanner' where pc_name=N'id_page_header'
+update tblPageContent set pc_value=N'DrugTime - Scheduling medication reminder and prescription scanner' where pc_name = N'meta_description' 
+update tblPageContent set pc_value=N'DrugTime, Medisafe,ExploseIT,MyTherapy,schedule,medication,reminder' where pc_name=N'meta_keywords'
+update tblPageContent set pc_value=N'DrugTime - Scheduling medication reminder and prescription scanner' where pc_name=N'id_page_header'
 select * from tblPageContent
 

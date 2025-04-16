@@ -26,10 +26,10 @@ namespace Schminder_Net.ef
             this.dbCon = dbCon;
         }
 
-        public List<cSetting> getList()
+        public List<c_setting> getList()
         {
             var ls = this.dbCon?.lSetting;
-            List<cSetting> ret = ls!.ToList<cSetting>();
+            List<c_setting> ret = ls!.ToList<c_setting>();
 
             return ret;
         }
@@ -55,7 +55,7 @@ namespace Schminder_Net.ef
             {
                 format = "v{0}";
             }
-            ret = String.Format(format, typeof(cSetting).Assembly.GetName().Version);
+            ret = String.Format(format, typeof(c_setting).Assembly.GetName().Version);
 
             return ret;
         }
@@ -89,53 +89,60 @@ namespace Schminder_Net.ef
         }
 
 
-        public cSetting? doSettingsReadByName(string setName)
+        public c_setting? doSettingsReadByName(string setName)
         {
-            cSetting ret = new cSetting();
+            c_setting ret = new c_setting();
             SqlParameter[] lParams = { new SqlParameter("@setName", setName) };
             string cmd = String.Format("Execute spSettingsList '{0}'", setName);
             var mQuery = this.dbCon!.lSetting.FromSqlRaw(cmd);
-            var mEnum = mQuery.AsEnumerable<cSetting>();
+            var mEnum = mQuery.AsEnumerable<c_setting>();
             if (mEnum != null)
             {
-                ret = mEnum.FirstOrDefault<cSetting>()!;
+                ret = mEnum.FirstOrDefault<c_setting>()!;
             }
             return ret;
         }
 
-        public List<cSetting>? doSettingsList(string setName)
+        public c_setting doSettingsListAllIntoSettings()
         {
-            List<cSetting>? ret = null;
+            c_setting ret = new c_setting();
+
+
+            return ret;
+        }
+        public List<c_setting>? doSettingsList(string setName)
+        {
+            List<c_setting>? ret = null;
             SqlParameter[] lParams = { new SqlParameter("@setName", setName) };
             string cmd = String.Format("Execute spSettingsList '{0}'", setName);
             var mQuery = this.dbCon!.lSetting.FromSqlRaw(cmd);
-            var mEnum = mQuery.AsEnumerable<cSetting>();
+            var mEnum = mQuery.AsEnumerable<c_setting>();
 
-            ret = mEnum.ToList<cSetting>();
+            ret = mEnum.ToList<c_setting>();
 
             return ret;
         }
 
-        public List<cSetting>? doSettingsListAll()
+        public List<c_setting>? doSettingsListAll()
         {
-            List<cSetting>? ret = null;
+            List<c_setting>? ret = null;
             string cmd = String.Format("Execute spSettingsListAll");
             var mQuery = this.dbCon!.lSetting.FromSqlRaw(cmd);
-            var mEnum = mQuery.AsEnumerable<cSetting>();
+            var mEnum = mQuery.AsEnumerable<c_setting>();
 
-            ret = mEnum.ToList<cSetting>();
+            ret = mEnum.ToList<c_setting>();
 
             return ret;
         }
 
-        public List<cSetting>? doSettingsUpdateValue(string setName, string setValue)
+        public List<c_setting>? doSettingsUpdateValue(string setName, string setValue)
         {
-            List<cSetting>? ret = new List<cSetting>();
+            List<c_setting>? ret = new List<c_setting>();
             string cmd = String.Format("Execute spSettingsUpdateValue '{0}','{1}'", setName, setValue);
             var mQuery = this.dbCon!.lSetting.FromSqlRaw(cmd);
-            var mEnum = mQuery.AsEnumerable<cSetting>();
+            var mEnum = mQuery.AsEnumerable<c_setting>();
 
-            ret = mEnum.ToList<cSetting>();
+            ret = mEnum.ToList<c_setting>();
             return ret;
         }
 
@@ -169,8 +176,44 @@ namespace Schminder_Net.ef
     }
 
     [Table("tblSettings")]
-    public class cSetting
+    public class c_setting
     {
+        private List<c_setting>? l_settings { get; set; } = null;
+
+        public c_setting()
+        {
+        }
+
+        public c_setting set_settings(dbContext? _dbCon)
+        {
+            string cmd = String.Format("Execute spSettingsListAll");
+            var mQuery = _dbCon!.lSetting.FromSqlRaw(cmd);
+            var mEnum = mQuery.AsEnumerable<c_setting>();
+
+            l_settings = mEnum.ToList<c_setting>();
+
+            return this;
+        }
+
+        public string gset(string set_name)
+        {
+            string ret = "";
+
+            if (l_settings != null)
+            {
+                var retObj = l_settings.FirstOrDefault(s => String.Compare(s.setName, set_name, true) == 0);
+                if (retObj != null)
+                {
+                    if (retObj.setValue != null)
+                    {
+                        ret = retObj.setValue;
+                    }
+                }
+            }
+
+            return ret;
+        }
+
         [Key]
         public string setName { get; set; } = String.Empty;
         public string setValue { get; set; } = String.Empty;
