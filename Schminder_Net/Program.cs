@@ -1,4 +1,4 @@
-
+﻿
 
 using System.Text;
 using Microsoft.EntityFrameworkCore;
@@ -65,15 +65,25 @@ if (!app.Environment.IsDevelopment())
 
 //app.UseHttpsRedirection();
 app.UseStaticFiles();
+var physicalDistPath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), @"..\..\dist"));
 if (app.Environment.IsDevelopment())
 {
-    app.UseStaticFiles(new StaticFileOptions
+    var distPath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), @"..\..\dist"));
+    if (Directory.Exists(distPath))
     {
-        FileProvider = new PhysicalFileProvider(
-            Path.Combine(Directory.GetCurrentDirectory(), @"..\..\dist")),
-        RequestPath = "/dist"
-    });
+        Console.WriteLine("✔ Serving static files from: " + distPath);
+        app.UseStaticFiles(new StaticFileOptions
+        {
+            FileProvider = new PhysicalFileProvider(distPath),
+            RequestPath = "/dist"
+        });
+    }
+    else
+    {
+        Console.WriteLine("❌ DIST FOLDER NOT FOUND: " + distPath);
+    }
 }
+
 app.UseRouting();
 
 app.UseAuthorization();

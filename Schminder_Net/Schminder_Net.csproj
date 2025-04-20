@@ -4,8 +4,8 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <AssemblyVersion>1.0.1.3</AssemblyVersion>
-    <FileVersion>1.0.1.3</FileVersion>
+    <AssemblyVersion>1.0.1.4</AssemblyVersion>
+    <FileVersion>1.0.1.4</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,6 +25,14 @@
     <Folder Include="wwwroot\site\graphics\" />
   </ItemGroup>
 
+  <Target Name="CopyDistToWwwrootSource" Condition="'$(Configuration)' == 'Debug'" AfterTargets="Build">
+    <Message Text="✅ Copying dist to source wwwroot folder for Debug..." Importance="high" />
+    <ItemGroup>
+      <DistFiles Include="..\..\dist\**\*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(DistFiles)" DestinationFiles="@(DistFiles->'wwwroot\dist\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="false" />
+  </Target>
+  
   <ItemGroup>
     <Content Include="..\..\dist\**\*.*">
       <CopyToPublishDirectory>Always</CopyToPublishDirectory>

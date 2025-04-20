@@ -14,6 +14,7 @@
 
 const path = require('path');
 const outputBase = path.resolve(__dirname, '../../dist');
+const wwwrootDist = 'wwwroot/dist'; 
 const merge = require('merge-stream');
 
 const { src, dest, series } = require('gulp');
@@ -69,17 +70,31 @@ function fortawesomecopy() {
  
  // The `clean` function is not exported so it can be considered a private task.
  // It can still be used within the `series()` composition.
- function doclean() {
-    const distPath = `${outputBase}/`;
-  
+function doclean() {
+    const pathsToClean = [];
+
+    const distPath = path.join(outputBase, '/');
+    const wwwrootPath = path.join(wwwrootDist, '/');
+
     if (fs.existsSync(distPath)) {
-      return src(distPath, { read: false, allowEmpty: true })
-        .pipe(clean({ force: true }));
+        pathsToClean.push(distPath);
     } else {
-      console.log(`Skipping clean: ${distPath} does not exist.`);
-      return Promise.resolve(); // ✅ prevents Gulp from hanging or erroring
+        console.log(`Skipping clean: ${distPath} does not exist.`);
     }
-  }
+
+    if (fs.existsSync(wwwrootPath)) {
+        pathsToClean.push(wwwrootPath);
+    } else {
+        console.log(`Skipping clean: ${wwwrootPath} does not exist.`);
+    }
+
+    if (pathsToClean.length > 0) {
+        return src(pathsToClean, { read: false, allowEmpty: true })
+            .pipe(clean({ force: true }));
+    } else {
+        return Promise.resolve(); // nothing to clean
+    }
+}
    
 
 exports.build = exports.default;
