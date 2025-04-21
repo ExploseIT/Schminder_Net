@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\site\graphics\" />
+    <Folder Include="wwwroot\xml\" />
   </ItemGroup>
 
   <Target Name="CopyDistToWwwrootSource" Condition="'$(Configuration)' == 'Debug'" AfterTargets="Build">

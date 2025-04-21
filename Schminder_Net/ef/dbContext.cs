@@ -25,6 +25,8 @@ namespace Schminder_Net.ef
         { }
 
         public DbSet<ent_menu> lMenu { get; set; }
+        public DbSet<c_ampp> lAmpp { get; set; }
+        public DbSet<c_vmpp> lVmpp { get; set; }
         public DbSet<c_post> lPost { get; set; }
         public DbSet<ent_page> lPage { get; set; }
         public DbSet<c_setting> lSetting { get; set; }

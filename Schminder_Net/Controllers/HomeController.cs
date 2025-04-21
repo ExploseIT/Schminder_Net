@@ -14,7 +14,7 @@ namespace Schminder_Net.Controllers
         private IConfiguration _conf;
         private IWebHostEnvironment _env;
 
-
+        private bool b_mpp_process = false;
         public HomeController(ILogger<HomeController> logger, IConfiguration conf, IWebHostEnvironment env, dbContext dbCon)
         {
             _logger = logger;
@@ -32,10 +32,62 @@ namespace Schminder_Net.Controllers
             _m_App.mPage = new ent_page(_dbCon).doPageReadHome();
             _m_App.mPosts = new ent_post(_dbCon).doPostReadListByPageId(_m_App.mPage?.page_Id, "");
 
+            if (b_mpp_process)
+            {
+                ImportAmpp(_dbCon, @"C:\dmdDataLoader\xml\f_ampp2_3100425.xml");
+                ImportVmpp(_dbCon, @"C:\dmdDataLoader\xml\f_vmpp2_3100425.xml");
+            }
 
             return View(_m_App);
         }
 
+        public void ImportAmpp(dbContext _db_con, string filePath)
+        {
+            var _e_mpp = new ent_mpp(_db_con);
+
+            //var l_elems = _e_ampp.PrintAmppElementNames(filePath);
+            var l_ampp = _e_mpp.ParseAmppXml(filePath);
+            //var l_ampp = _e_ampp.ParseAmppXmlWhere(filePath,"nepa");
+
+            var _r_elems = _e_mpp.doAmpUpdateList(l_ampp);
+
+        }
+
+        public void ImportVmpp(dbContext _db_con, string filePath)
+        {
+            var _e_mpp = new ent_mpp(_db_con);
+
+            //var l_elems = _e_ampp.PrintVmppElementNames(filePath);
+            //var l_ampp = _e_ampp.ParseAmppXml(filePath);
+            var l_ampp = _e_mpp.ParseVmppXml(filePath);
+
+            var _r_elems = _e_mpp.doVmpUpdateList(l_ampp);
+
+        }
+
+        public async Task ImportAmppAsync(dbContext _db_con, string filePath)
+        {
+            var _e_mpp = new ent_mpp(_db_con);
+
+            //var l_elems = _e_ampp.PrintAmppElementNames(filePath);
+            var l_ampp = _e_mpp.ParseAmppXml(filePath);
+            //var l_ampp = _e_ampp.ParseAmppXmlWhere(filePath,"nepa");
+
+            var _r_elems = _e_mpp.doAmpUpdateList(l_ampp);
+
+        }
+
+        public async Task ImportVmppAsync(dbContext _db_con, string filePath)
+        {
+            var _e_mpp = new ent_mpp(_db_con);
+
+            //var l_elems = _e_ampp.PrintVmppElementNames(filePath);
+            //var l_ampp = _e_ampp.ParseAmppXml(filePath);
+            var l_mpp = _e_mpp.ParseVmppXml(filePath);
+
+            var _r_elems = _e_mpp.doVmpUpdateList(l_mpp);
+
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
