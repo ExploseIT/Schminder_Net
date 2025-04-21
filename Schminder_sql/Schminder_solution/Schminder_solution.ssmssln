@@ -11,6 +11,8 @@ Project("{4F2E2C19-372F-40D8-9FA7-9D2138C6997A}") = "schminder_proj_bulk", "schm
 EndProject
 Project("{4F2E2C19-372F-40D8-9FA7-9D2138C6997A}") = "schminder_update_250412", "schminder_update_250412\schminder_update_250412.ssmssqlproj", "{36EFE54B-F44C-40C7-9835-5D83BE780BE9}"
 EndProject
+Project("{4F2E2C19-372F-40D8-9FA7-9D2138C6997A}") = "schminder_proj_meds", "schminder_proj_meds\schminder_proj_meds.ssmssqlproj", "{E1272E4D-EF31-4902-8472-E136DF14C13B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Default|Default = Default|Default
@@ -19,8 +21,9 @@ Global
 		{CDD536CC-DCC3-4665-995F-E426C96E8377}.Default|Default.ActiveCfg = Default
 		{7E813CD0-A63D-4A8A-BCE7-E915BBD4288D}.Default|Default.ActiveCfg = Default
 		{1C435BAC-9C0E-4635-AA7F-0519C5004109}.Default|Default.ActiveCfg = Default
-		{029F6D0B-AB81-4C55-B906-AD29346810E6}.Default|Default.ActiveCfg = Default
 		{36EFE54B-F44C-40C7-9835-5D83BE780BE9}.Default|Default.ActiveCfg = Default
+		{F32F9E3E-96C1-4E66-9938-122C44F53579}.Default|Default.ActiveCfg = Default
+		{E1272E4D-EF31-4902-8472-E136DF14C13B}.Default|Default.ActiveCfg = Default
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -192,7 +192,6 @@ WHERE v.vmp_name LIKE '%Maxitrol%'
 
 
 
-exec spAmppReadById 1375411000001106
 
 select * from tblAmpp where amp_name like '%Nepafenac%'
 select * from tblAmpp where amp_name like '%Maxitrol%'
