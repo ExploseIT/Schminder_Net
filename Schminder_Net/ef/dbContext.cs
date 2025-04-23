@@ -24,6 +24,8 @@ namespace Schminder_Net.ef
 : base(options)
         { }
 
+
+        public DbSet<c_FirebaseTokenInfo> lFBTs { get; set; }
         public DbSet<ent_menu> lMenu { get; set; }
         public DbSet<c_ampp> lAmpp { get; set; }
         public DbSet<c_vmpp> lVmpp { get; set; }

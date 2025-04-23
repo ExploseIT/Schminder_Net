@@ -8,6 +8,8 @@ using Schminder_Net.ef;
 using Schminder_Net.Models;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.FileProviders;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -17,8 +19,15 @@ builder.Configuration.GetSection("CookieAuth").Bind(cookieAuthOptions);
 builder.Services.AddDbContext<dbContext>(options => options.UseSqlServer(connectionString));
 
 
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+FirebaseApp.Create(new AppOptions()
+{
+    Credential = GoogleCredential.FromFile("schminder-9bd82-firebase-adminsdk-fbsvc-0452be1f84.json")
+});
+
 
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 var key = Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]!);
@@ -54,6 +63,8 @@ services.AddAuthentication("CookieAuth")
 */
 
 var app = builder.Build();
+
+app.UseMiddleware<FirebaseAuthMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
