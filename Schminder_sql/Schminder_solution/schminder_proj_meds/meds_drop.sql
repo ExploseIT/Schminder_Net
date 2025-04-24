@@ -44,6 +44,8 @@ create table tblVmpp (
 go
 
 
+select count(*) from tblAmpp
+select count(*) from tblVmpp
 
 select * from tblAmpp
 select * from tblVmpp
