@@ -70,6 +70,24 @@ namespace Schminder_Net.Controllers
             return ret;
         }
 
+        [HttpGet("api_MedSearch")]
+        public List<c_med> api_MedSearch(string med_name)
+        {
+            HttpContext _hc = this.HttpContext;
+            var ret = new ent_mpp(_dbCon).doMedSearchbyName(med_name);
+
+            return ret;
+        }
+
+        [HttpGet("api_MedListAll")]
+        public List<c_med_indiv> api_MedListAll()
+        {
+            HttpContext _hc = this.HttpContext;
+            var ret = new ent_mpp(_dbCon).doMedListAll();
+
+            return ret;
+        }
+
 
         public class s_FirebaseToken
         {

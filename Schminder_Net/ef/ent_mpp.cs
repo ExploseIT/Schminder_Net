@@ -343,7 +343,81 @@ namespace Schminder_Net.ef
             }
             return ret;
         }
+
+
+        public List<c_med> doMedSearchbyName(string med_search)
+        {
+            List<c_med> ret = new List<c_med>();
+            try
+            {
+                SqlParameter[] lParams = {
+                    new SqlParameter("@med_search", SqlDbType.NVarChar, 0, ParameterDirection.Input, true, 0, 0, "", DataRowVersion.Current, IsDbNull(med_search))
+                };
+
+                var sp = "spMedSearchByName @med_search";
+
+                var retSP = this.dbCon?.lMeds.FromSqlRaw(sp, lParams).AsEnumerable();
+
+                if (retSP != null && retSP.Count() > 0)
+                {
+                    ret = retSP?.ToList()!;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                exc = ex;
+            }
+
+            return ret;
+        }
+
+        public List<c_med_indiv> doMedListAll()
+        {
+            List<c_med_indiv> ret = new List<c_med_indiv>();
+            try
+            {
+                SqlParameter[] lParams = {
+                   
+                };
+
+                var sp = "spMedListAll";
+
+                var retSP = this.dbCon?.lMedIndivs.FromSqlRaw(sp, lParams).AsEnumerable();
+
+                if (retSP != null && retSP.Count() > 0)
+                {
+                    ret = retSP?.ToList()!;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                exc = ex;
+            }
+
+            return ret;
+        }
     }
+
+    public class c_med_indiv
+    {
+        [Key]
+        public long med_id { get; set; }
+        public long med_pid { get; set; }
+        public string? med_name { get; set; } = null;
+    }
+
+    public class c_med
+    {
+        [Key]
+        public long med_id { get; set; }
+        public long med_pid { get; set; }
+        public string? med_whole { get; set; } = null;
+        public double? med_qtyval { get; set; } = null;
+        public string? med_uomcd { get; set; } = null;
+    }
+
 
     public class c_vmpp
     {
@@ -372,6 +446,19 @@ namespace Schminder_Net.ef
         public string? amp_combpackcd { get; set; } = null;
 	    public string? amp_disccd { get; set; } = null;
 
+    }
+
+    public class c_amppvmpp
+    {
+        public long vmp_vpid { get; set; } = 0;
+        public long vmp_vppid { get; set; } = 0;
+        public string vmp_name { get; set; } = "";
+        //vmp_combpackcd,
+        public string vmp_qtyval { get; set; } = "";
+        public long vmp_uomcd { get; set; } = 0;
+        public string amp_name { get; set; } = "";
+        //amp_subp,
+        //amp_legal_catcode
     }
 }
 
