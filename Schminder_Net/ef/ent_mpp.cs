@@ -400,6 +400,12 @@ namespace Schminder_Net.ef
         }
     }
 
+    public class c_med_indiv_info
+    {
+        public string med_indiv_name { get; set; } = $"med_indiv_"+ DateTime.Now.ToString("yyyyMMdd_HHmm");
+        public List<c_med_indiv>? med_indiv_list { get; set; } = null;
+    }
+
     public class c_med_indiv
     {
         [Key]

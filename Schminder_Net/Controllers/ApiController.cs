@@ -80,10 +80,11 @@ namespace Schminder_Net.Controllers
         }
 
         [HttpGet("api_MedListAll")]
-        public List<c_med_indiv> api_MedListAll()
+        public c_med_indiv_info api_MedListAll()
         {
             HttpContext _hc = this.HttpContext;
-            var ret = new ent_mpp(_dbCon).doMedListAll();
+            c_med_indiv_info ret = new c_med_indiv_info();
+            ret.med_indiv_list = new ent_mpp(_dbCon).doMedListAll();
 
             return ret;
         }

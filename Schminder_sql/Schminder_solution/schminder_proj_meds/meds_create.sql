@@ -163,8 +163,8 @@ go
 create view vwMed
 as
 select 
-	v.vmp_vpid as med_id
-    , v.vmp_vppid as med_pid
+	cast(v.vmp_vpid as bigint) as med_id
+    , cast(v.vmp_vppid as bigint) as med_pid
     --, case when (not v.vmp_name like '%generic %' ) then v.vmp_name else a.amp_name end as med_whole
 	, replace (v.vmp_name, 'generic ', '') as med_whole
     , cast(v.vmp_qtyval as float) as med_qtyval
@@ -255,9 +255,9 @@ BEGIN
         FROM vwMed
         WHERE med_whole IS NOT NULL AND LEN(med_whole) > 0
     )
-    SELECT med_name, med_id, med_pid
+    SELECT  med_id, med_pid, med_name
     FROM cte
-    WHERE rn = 1
+    WHERE (rn = 1 and LEN(med_name)>3) and (not med_name in ('oral','date', 'auto'))
     ORDER BY med_name;
 END
 GO
@@ -281,8 +281,17 @@ exec spAmppVmppSearchByName 'Maxitrol'
 exec spAmppVmppSearchByName 'Acetazolamide'
 exec spAmppVmppSearchByName 'Nepafenac'
 */
-
+declare @tab table
+(
+ med_id bigint
+ , med_pid bigint
+ ,med_name nvarchar(100)
+ )
+ insert into @tab
 exec spMedListAll
-exec spMedSearchByName 'Maxitrol'
-exec spMedSearchByName 'Acetazol'
-exec spMedSearchByName 'Nepafenac'
+
+select * from @tab where med_name like '%TICE%'
+
+--exec spMedSearchByName 'Maxitrol'
+--exec spMedSearchByName 'Acetazol'
+--exec spMedSearchByName 'Nepafenac'
