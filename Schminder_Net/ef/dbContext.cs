@@ -27,6 +27,7 @@ namespace Schminder_Net.ef
 
         public DbSet<c_FirebaseTokenInfo> lFBTs { get; set; }
         public DbSet<ent_menu> lMenu { get; set; }
+        public DbSet<c_med_indiv_old> lMedIndivsOld { get; set; }
         public DbSet<c_med_indiv> lMedIndivs { get; set; }
         public DbSet<c_med> lMeds { get; set; }
         public DbSet<c_ampp> lAmpp { get; set; }

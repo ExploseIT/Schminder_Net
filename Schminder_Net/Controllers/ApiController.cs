@@ -79,16 +79,25 @@ namespace Schminder_Net.Controllers
             return ret;
         }
 
-        [HttpGet("api_MedListAll")]
-        public c_med_indiv_info api_MedListAll()
+        [AuthorizeFirebase]
+        [HttpGet("api_MedIndivListAll")]
+        public c_med_indiv_info api_MedIndivListAll()
         {
             HttpContext _hc = this.HttpContext;
             c_med_indiv_info ret = new c_med_indiv_info();
+            ret.med_indiv_list = new ent_mpp(_dbCon).doMedIndivListAll();
+            return ret;
+        }
+
+        [HttpGet("api_MedListAll")]
+        public c_med_indiv_info_old api_MedListAll()
+        {
+            HttpContext _hc = this.HttpContext;
+            c_med_indiv_info_old ret = new c_med_indiv_info_old();
             ret.med_indiv_list = new ent_mpp(_dbCon).doMedListAll();
 
             return ret;
         }
-
 
         public class s_FirebaseToken
         {

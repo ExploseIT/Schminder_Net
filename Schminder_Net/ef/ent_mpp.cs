@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Schminder_Net.Models;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Runtime.Intrinsics.Arm;
@@ -372,7 +373,34 @@ namespace Schminder_Net.ef
             return ret;
         }
 
-        public List<c_med_indiv> doMedListAll()
+        public List<c_med_indiv_old> doMedListAll()
+        {
+            List<c_med_indiv_old> ret = new List<c_med_indiv_old>();
+            try
+            {
+                SqlParameter[] lParams = {
+
+                };
+
+                var sp = "spMedIndivListAll";
+
+                var retSP = this.dbCon?.lMedIndivsOld.FromSqlRaw(sp, lParams).AsEnumerable();
+
+                if (retSP != null && retSP.Count() > 0)
+                {
+                    ret = retSP?.ToList()!;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                exc = ex;
+            }
+
+            return ret;
+        }
+
+        public List<c_med_indiv> doMedIndivListAll()
         {
             List<c_med_indiv> ret = new List<c_med_indiv>();
             try
@@ -381,7 +409,7 @@ namespace Schminder_Net.ef
                    
                 };
 
-                var sp = "spMedListAll";
+                var sp = "spMedIndivListAll";
 
                 var retSP = this.dbCon?.lMedIndivs.FromSqlRaw(sp, lParams).AsEnumerable();
 
@@ -403,14 +431,26 @@ namespace Schminder_Net.ef
     public class c_med_indiv_info
     {
         public string med_indiv_name { get; set; } = $"med_indiv_"+ DateTime.Now.ToString("yyyyMMdd_HHmm");
+        public string med_server_vsersion { get; set; } = typeof(mApp).Assembly.GetName().Version!.ToString();
         public List<c_med_indiv>? med_indiv_list { get; set; } = null;
+    }
+    public class c_med_indiv_info_old
+    {
+        public string med_indiv_name { get; set; } = $"med_indiv_" + DateTime.Now.ToString("yyyyMMdd_HHmm");
+        public List<c_med_indiv_old>? med_indiv_list { get; set; } = null;
+    }
+
+    public class c_med_indiv_old
+    {
+        [Key]
+        public long med_id { get; set; }
+        public long med_pid { get; set; }
+        public string? med_name { get; set; } = null;
     }
 
     public class c_med_indiv
     {
         [Key]
-        public long med_id { get; set; }
-        public long med_pid { get; set; }
         public string? med_name { get; set; } = null;
     }
 

@@ -1,6 +1,8 @@
 ﻿
 using FirebaseAdmin.Auth;
 using Google.Apis.Auth.OAuth2;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
@@ -123,6 +125,35 @@ namespace Schminder_Net.ef
         }
     }
 
+
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
+    public class AuthorizeFirebaseAttribute : Attribute, IAsyncAuthorizationFilter
+    {
+        public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
+        {
+            var authHeader = context.HttpContext.Request.Headers["Authorization"].FirstOrDefault();
+
+            if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
+            {
+                context.Result = new UnauthorizedResult();
+                return;
+            }
+
+            var token = authHeader.Substring("Bearer ".Length).Trim();
+
+            try
+            {
+                var decodedToken = await FirebaseAuth.DefaultInstance.VerifyIdTokenAsync(token);
+
+                // Optionally, store UID for use later
+                context.HttpContext.Items["FirebaseUid"] = decodedToken.Uid;
+            }
+            catch (Exception)
+            {
+                context.Result = new UnauthorizedResult();
+            }
+        }
+    }
 
     public class c_FirebaseTokenInfo
     {
