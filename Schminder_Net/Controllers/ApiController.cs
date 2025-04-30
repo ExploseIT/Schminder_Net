@@ -59,6 +59,18 @@ namespace Schminder_Net.Controllers
             return ret;
         }
 
+
+        [HttpGet("api_ServerVersion2_0")]
+        public r_ServerVersion2_0 api_ServerVersion2_0()
+        {
+            HttpContext _hc = this.HttpContext;
+
+            r_ServerVersion2_0 ret = new r_ServerVersion2_0();
+            ret.svVersion = typeof(mApp).Assembly.GetName().Version!.ToString();
+
+            return ret;
+        }
+
         [HttpGet("api_ServerVersion")]
         public  r_ServerVersion api_ServerVersion()
         {
@@ -78,6 +90,17 @@ namespace Schminder_Net.Controllers
 
             return ret;
         }
+
+        [AuthorizeFirebase]
+        [HttpGet("api_MedIndivListAll2_0")]
+        public c_medIndivInfo api_MedIndivListAll2_0()
+        {
+            HttpContext _hc = this.HttpContext;
+            c_medIndivInfo ret = new c_medIndivInfo();
+            ret.medIndivList = new ent_mpp(_dbCon).doMedIndivListAll2_0();
+            return ret;
+        }
+
 
         [AuthorizeFirebase]
         [HttpGet("api_MedIndivListAll")]
@@ -105,6 +128,11 @@ namespace Schminder_Net.Controllers
         }
 
 
+        public class r_ServerVersion2_0
+        {
+            public string? svVersion { get; set; } = "";
+
+        }
 
         public class r_ServerVersion
         {

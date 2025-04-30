@@ -400,6 +400,34 @@ namespace Schminder_Net.ef
             return ret;
         }
 
+
+        public List<c_medIndiv> doMedIndivListAll2_0()
+        {
+            List<c_medIndiv> ret = new List<c_medIndiv>();
+            try
+            {
+                SqlParameter[] lParams = {
+
+                };
+
+                var sp = "spMedIndivListAll2_0";
+
+                var retSP = this.dbCon?.lMedIndivs2_0.FromSqlRaw(sp, lParams).AsEnumerable();
+
+                if (retSP != null && retSP.Count() > 0)
+                {
+                    ret = retSP?.ToList()!;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                exc = ex;
+            }
+
+            return ret;
+        }
+
         public List<c_med_indiv> doMedIndivListAll()
         {
             List<c_med_indiv> ret = new List<c_med_indiv>();
@@ -428,6 +456,13 @@ namespace Schminder_Net.ef
         }
     }
 
+    public class c_medIndivInfo
+    {
+        public string medIndivName { get; set; } = $"med_indiv_" + DateTime.Now.ToString("yyyyMMdd_HHmm");
+        public string medServerVersion { get; set; } = typeof(mApp).Assembly.GetName().Version!.ToString();
+        public List<c_medIndiv>? medIndivList { get; set; } = null;
+    }
+
     public class c_med_indiv_info
     {
         public string med_indiv_name { get; set; } = $"med_indiv_"+ DateTime.Now.ToString("yyyyMMdd_HHmm");
@@ -446,6 +481,13 @@ namespace Schminder_Net.ef
         public long med_id { get; set; }
         public long med_pid { get; set; }
         public string? med_name { get; set; } = null;
+    }
+
+
+    public class c_medIndiv
+    {
+        [Key]
+        public string? medName { get; set; } = null;
     }
 
     public class c_med_indiv
