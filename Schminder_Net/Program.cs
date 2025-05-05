@@ -15,6 +15,10 @@ var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 var cookieAuthOptions = new CookieAuthOptions();
+
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+
 builder.Configuration.GetSection("CookieAuth").Bind(cookieAuthOptions);
 builder.Services.AddDbContext<dbContext>(options => options.UseSqlServer(connectionString));
 

@@ -43,7 +43,7 @@ namespace Schminder_Net.Controllers
 
         public void ImportAmpp(dbContext _db_con, string filePath)
         {
-            var _e_mpp = new ent_mpp(_db_con);
+            var _e_mpp = new ent_mpp(_db_con, _logger);
 
             //var l_elems = _e_ampp.PrintAmppElementNames(filePath);
             var l_ampp = _e_mpp.ParseAmppXml(filePath);
@@ -55,7 +55,7 @@ namespace Schminder_Net.Controllers
 
         public void ImportVmpp(dbContext _db_con, string filePath)
         {
-            var _e_mpp = new ent_mpp(_db_con);
+            var _e_mpp = new ent_mpp(_db_con, _logger);
 
             //var l_elems = _e_ampp.PrintVmppElementNames(filePath);
             //var l_ampp = _e_ampp.ParseAmppXml(filePath);
@@ -67,7 +67,7 @@ namespace Schminder_Net.Controllers
 
         public async Task ImportAmppAsync(dbContext _db_con, string filePath)
         {
-            var _e_mpp = new ent_mpp(_db_con);
+            var _e_mpp = new ent_mpp(_db_con, _logger);
 
             //var l_elems = _e_ampp.PrintAmppElementNames(filePath);
             var l_ampp = _e_mpp.ParseAmppXml(filePath);
@@ -79,7 +79,7 @@ namespace Schminder_Net.Controllers
 
         public async Task ImportVmppAsync(dbContext _db_con, string filePath)
         {
-            var _e_mpp = new ent_mpp(_db_con);
+            var _e_mpp = new ent_mpp(_db_con, _logger);
 
             //var l_elems = _e_ampp.PrintVmppElementNames(filePath);
             //var l_ampp = _e_ampp.ParseAmppXml(filePath);

@@ -43,6 +43,12 @@
           <AssociatedConnUserName>schminder_user</AssociatedConnUserName>
           <FullPath>Firebase_create.sql</FullPath>
         </FileNode>
+        <FileNode Name="Firebase_test.sql">
+          <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:explose.info:False:schminder_user</AssociatedConnectionMoniker>
+          <AssociatedConnSrvName>explose.info</AssociatedConnSrvName>
+          <AssociatedConnUserName>schminder_user</AssociatedConnUserName>
+          <FullPath>Firebase_test.sql</FullPath>
+        </FileNode>
       </Items>
     </LogicalFolder>
     <LogicalFolder Name="Miscellaneous" Type="3" Sorted="true">

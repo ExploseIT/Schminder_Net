@@ -13,15 +13,18 @@ namespace Schminder_Net.ef
     public class ent_mpp : cIsDbNull
     {
         private dbContext? dbCon { get; } = null;
+        private ILogger? logger { get; } = null!;
+
         private Exception? exc = null;
 
         public ent_mpp()
         {
         }
 
-        public ent_mpp(dbContext dbCon)
+        public ent_mpp(dbContext dbCon, ILogger logger)
         {
             this.dbCon = dbCon;
+            this.logger = logger;
         }
 
 
@@ -401,6 +404,44 @@ namespace Schminder_Net.ef
         }
 
 
+        public MedIndivActionRx doMedIndivActionAdd(MedIndivActionTx p)
+        {
+            MedIndivActionRx ret = new MedIndivActionRx();
+
+            var l_mia = new List<MedIndivAction>();
+            if (p.medIndivActionList != null)
+            {
+                try
+                {
+                    foreach (MedIndivAction mia in p.medIndivActionList)
+                    {
+                        SqlParameter[] lParams = {
+                     new SqlParameter("@medIndivId", SqlDbType.Int, 0, ParameterDirection.Input, true, 0, 0, "", DataRowVersion.Current, IsDbNull(mia.medIndivId))
+                    , new SqlParameter("@medIndivName", SqlDbType.NVarChar, 0, ParameterDirection.Input, true, 0, 0, "", DataRowVersion.Current, IsDbNull(mia.medIndivName))
+                    , new SqlParameter("@medIndivAction", SqlDbType.Char, 0, ParameterDirection.Input, true, 0, 0, "", DataRowVersion.Current, IsDbNull(mia.medIndivAction))
+                    , new SqlParameter("@medIndivUserUid", SqlDbType.NVarChar, 0, ParameterDirection.Input, true, 0, 0, "", DataRowVersion.Current, IsDbNull(mia.medIndivUserUid))
+                };
+                        var sp = "spMedIndivActionListAdd @medIndivId, @medIndivName, @medIndivAction, @medIndivUserUid";
+                        var retSP = this.dbCon?.lMedIndivAction.FromSqlRaw(sp, lParams).AsEnumerable();
+
+                        if (retSP != null && retSP.Count() > 0)
+                        {
+                            var r_mia = retSP?.FirstOrDefault()!;
+                            l_mia.Add(r_mia);
+                        }
+                    }
+                    ret.medSuccess = true;
+                    ret.medCount = l_mia.Count;
+                }
+                catch (Exception ex)
+                {
+                    exc = ex;
+                    ret.medMessage = ex.Message;
+                }
+            }
+            return ret;
+        }
+
         public List<c_medIndiv> doMedIndivListAll2_0()
         {
             List<c_medIndiv> ret = new List<c_medIndiv>();
@@ -548,5 +589,46 @@ namespace Schminder_Net.ef
         //amp_subp,
         //amp_legal_catcode
     }
+
+
+    public class MedIndivAction
+    {
+        public MedIndivAction()
+        { }
+
+        public MedIndivAction(string mName, char mAction, string mUserUid )
+        {
+            this.medIndivId = 0;
+            this.medIndivName = mName;
+            this.medIndivAction = mAction;
+            this.medIndivUserUid = mUserUid;
+        }
+        [Key]
+        public int medIndivId { get; set; } = 0;
+        public string medIndivName { get; set; } = "";
+        public char medIndivAction { get; set; } = '+';
+        public string medIndivUserUid { get; set; } = "";
+    }
+
+    public class MedIndivActionTx
+    {
+        public string medIndivInfo { get; set; } = "";
+        public List<MedIndivAction>? medIndivActionList { get; set; } = null;
+    }
+
+
+
+    public class MedIndivActionRx
+    {
+        public bool medSuccess { get; set; } = false;
+        public string medMessage { get; set; } = "";
+        public int medCount { get; set; } = 0;
+    }
+
+    public class MedIndivDto
+    {
+        public string? medName { get; set; } = null;
+    }
+
 }
 

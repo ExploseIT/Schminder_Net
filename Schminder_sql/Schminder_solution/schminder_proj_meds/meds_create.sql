@@ -2,6 +2,10 @@
 USE [schminder_db]
 GO
 
+/*
+ drop table tblMedIndivExist
+ drop table tblMedIndivActionLog
+*/
 
 if exists (select * from sys.procedures where name='spAmppUpdate' and type='P')
 drop procedure spAmppUpdate
@@ -207,6 +211,8 @@ begin
 end
 go
 
+print 'Test 1'
+
 IF EXISTS (SELECT * FROM sys.procedures WHERE name = 'spMedListAll' AND type = 'P')
     DROP PROCEDURE spMedListAll;
 GO
@@ -318,15 +324,6 @@ FROM tblVmpp v
 LEFT JOIN tblAmpp a ON v.vmp_vppid = a.amp_vppid
 go
 
-select * from vwMed where med_name like '%positive control%' or med_name like '%positive%' or med_name like '%negative%' order by med_name asc
-select * from vwMed where med_name like '%insulin human%' or med_name like '%insulin_human%' order by med_name asc
-select v.vmp_name, replace (v.vmp_name, 'insulin human', 'Insulin_human') from tblVmpp v LEFT JOIN tblAmpp a ON v.vmp_vppid = a.amp_vppid
-where v.vmp_name like '%insulin human%'
-
-select v.vmp_name, a.amp_name from tblVmpp v LEFT JOIN tblAmpp a ON v.vmp_vppid = a.amp_vppid
-where v.vmp_name like '%insulin%'
-
-select * from vwMed where med_name like '%control%' order by med_name asc
 
 
 --or med_whole like '%nepafenac%' or med_whole like '%lantus%' or med_whole like '%novorapid%'
@@ -334,9 +331,13 @@ select * from vwMed where med_name like '%control%' order by med_name asc
 --select * from vwMed where med_whole like '%maxitrol%' or med_whole like '%Acetazolamide%'
 --or med_whole like '%nepafenac%' or med_whole like '%lantus%' or med_whole like '%novorapid%'
 
+-- stage --
+
+if exists (select * from tblSettings where setName='MedsUpdate')
+begin
 if exists (select * from sys.tables where name='tblMedIndiv' and type='U')
 drop table tblMedIndiv
-go
+
 create table tblMedIndiv
 (
  med_id bigint
@@ -346,31 +347,118 @@ create table tblMedIndiv
  )
  insert into tblMedIndiv
 exec spMedListAll
-
-select * from tblMedIndiv where med_name_indiv like '%maxitrol%' or med_name_indiv like '%Acetazolamide%'
-or med_name_indiv like '%nepafenac%' or med_name_indiv like '%lantus%' or med_name_indiv = 'novorapid'
-or med_name_indiv like '%anal%' or med_name_indiv = 'control' or med_name_indiv like '%insulin%'
-
-exec spMedSearchByName 'Anal'
-exec spMedSearchByName 'Maxitrol'
-exec spMedSearchByName 'Acetazol'
-exec spMedSearchByName 'Nepafenac'
-exec spMedSearchByName 'Lantus'
-exec spMedSearchByName 'NovoRapid, flexpen, 100 units, novo nordisk, 3ml'
-exec spMedSearchByName 'Anal'
-exec spMedSearchByName 'Control'
-goto skip
-
-select * from vwAmppVmpp where amp_name like '%novorapid%' or vmp_name like '%novorapid%'
---exec spMedSearchByName 'Maxitrol'
---exec spMedSearchByName 'Acetazol'
---exec spMedSearchByName 'Nepafenac'
-
-goto skip
+end
+go
 
 
 
 
-exec spMedSearchByName 'NovoRapid'
+IF EXISTS (SELECT * FROM sys.procedures WHERE name = 'spMedIndivListAll' AND type = 'P')
+    DROP PROCEDURE spMedIndivListAll
+GO
 
-skip:
+CREATE PROCEDURE spMedIndivListAll
+AS
+begin
+select 
+ med_id
+ , med_pid
+ , med_name_indiv
+ , med_name_indiv as med_name
+-- , med_name_both
+from tblMedIndiv
+--where med_name_indiv <> 'Fiasp'
+--where med_name_indiv like '%r%'
+order by med_name_indiv asc
+end
+go
+
+
+IF EXISTS (SELECT * FROM sys.procedures WHERE name = 'spMedIndivListAll2_0' AND type = 'P')
+    DROP PROCEDURE spMedIndivListAll2_0
+GO
+
+CREATE PROCEDURE spMedIndivListAll2_0
+AS
+begin
+select 
+ med_id as medId
+ , med_pid as medPid
+ , med_name_indiv as medNameIndiv
+ , med_name_indiv as medName
+-- , med_name_both
+from tblMedIndiv
+--where med_name_indiv <> 'Fiasp'
+--where med_name_indiv like '%r%'
+order by med_name_indiv asc
+end
+go
+
+
+if not exists (select * from sys.tables where name='tblMedIndivExist' and type='U')
+create table tblMedIndivExist
+(
+   medIndivId int identity(1,1)
+   , medIndivName nvarchar(20)
+   , medIndivUserUid nvarchar(50)
+   , medIndivAddedDT  [datetimeoffset](7)
+ CONSTRAINT [PK_tblMedIndivExist] PRIMARY KEY CLUSTERED 
+(
+	[medIndivId] ASC
+))
+go
+
+
+if not exists (select * from sys.tables where name='tblMedIndivActionLog' and type='U')
+create table tblMedIndivActionLog
+(
+   medIndivId int identity(1,1)
+   , medIndivName nvarchar(20)
+   , medIndivAction char(1)
+   , medIndivUserUid nvarchar(50)
+   , medIndivActionDT  [datetimeoffset](7)
+ CONSTRAINT [PK_tblMedIndivActionLog] PRIMARY KEY CLUSTERED 
+(
+	[medIndivId] ASC
+))
+go
+
+
+if exists (select * from sys.procedures where name='spMedIndivActionListAdd')
+drop procedure spMedIndivActionListAdd
+go
+create procedure spMedIndivActionListAdd
+   @medIndivId int
+   , @medIndivName nvarchar(20)
+   , @medIndivAction char(1)
+   , @medIndivUserUid nvarchar(50)
+  
+as
+	if not exists (select * from tblMedIndivExist where medIndivName=@medIndivName
+	and medIndivUserUid=medIndivUserUid) 
+	begin
+	if @medIndivAction='+'
+	insert into tblMedIndivExist (medIndivName, medIndivUserUid, medIndivAddedDT)
+	values (@medIndivName, @medIndivUserUid, sysdatetimeoffset())
+	end
+	else
+	begin
+	if @medIndivAction='-'
+	delete from tblMedIndivExist where medIndivName=@medIndivName and medIndivUserUid=@medIndivUserUid
+	end
+	insert into tblMedIndivActionLog
+	(medIndivName, medIndivAction, medIndivUserUid, medIndivActionDT)
+	values
+	(@medIndivName, @medIndivAction, @medIndivUserUid, sysdatetimeoffset())
+	select top 1 medIndivId,medIndivName,medIndivAction,medIndivUserUid,medIndivActionDT from tblMedIndivActionLog
+	where medIndivId=SCOPE_IDENTITY()
+go
+
+
+select * from tblMedIndivExist order by medIndivId desc
+
+select top 6 * from tblMedIndivActionLog order by medIndivId desc
+
+select * from tblFirebaseTokenInfo2 order by fbtIntId desc
+
+go
